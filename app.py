@@ -261,23 +261,22 @@ elif menu == "Visualisation des données":
     st.pyplot(fig)
 
 
+# Définir la liste des modèles
+models = ['Random_Forest', 'SVM', 'Logistic_Regression', 'KNN', 'MLPClassifier']
+
 # Section : Modélisation et Évaluation
-elif menu == "Modélisation et Évaluation":
-    st.header("📈 Modélisation et Évaluation")
-    st.write("Entrez les caractéristiques pour prédire un signal de trading.")
+st.header("📈 Modélisation et Évaluation")
+st.write("Entrez les caractéristiques pour prédire un signal de trading.")
 
+# Charger les résultats des modèles individuels
+results_df = pd.read_csv('model_evaluation_results.csv')
+st.subheader("Résultats des modèles")
+st.dataframe(results_df)
 
-       # Charger les résultats des modèles individuels
-    results_df = pd.read_csv('model_evaluation_results.csv')
-    st.subheader("Résultats des modèles")
-    st.dataframe(results_df)
-    # Affichage des résultats
-    st.subheader("Résultats des modèles")
-
-    # Sélection dynamique du modèle
+# Sélection dynamique du modèle
 model_choice = st.selectbox("Choisir un modèle pour afficher les résultats détaillés:", models)
 
-    # Afficher les résultats détaillés pour le modèle sélectionné
+# Afficher les résultats détaillés pour le modèle sélectionné
 st.subheader(f"Résultats détaillés pour {model_choice.replace('_', ' ')}")
 
 # Afficher les résultats d'évaluation
@@ -288,7 +287,7 @@ st.write(f"- **Précision** : {model_results['Precision'].values[0]:.4f}")
 st.write(f"- **Rappel** : {model_results['Recall'].values[0]:.4f}")
 st.write(f"- **F1-score** : {model_results['F1 Score'].values[0]:.4f}")
 
-      # Charger et afficher la matrice de confusion
+# Charger et afficher la matrice de confusion
 st.write("Matrice de confusion :")
 try:
     conf_matrix = Image.open(f'confusion_matrix_{model_choice}.png')  # Charger l'image
@@ -296,7 +295,7 @@ try:
 except FileNotFoundError:
     st.error(f"Fichier 'confusion_matrix_{model_choice}.png' introuvable.")
 
-    # Charger et afficher la courbe ROC
+# Charger et afficher la courbe ROC
 st.write("Courbe ROC :")
 try:
     roc_curve_img = Image.open(f'roc_curve_{model_choice}.png')  # Charger l'image
@@ -304,7 +303,7 @@ try:
 except FileNotFoundError:
     st.error(f"Fichier 'roc_curve_{model_choice}.png' introuvable.")
 
-    # Charger les résultats de comparaison des modèles
+# Charger les résultats de comparaison des modèles
 comparison_df = pd.read_csv('model_comparison_results.csv')
 st.subheader("Comparaison des Performances des Modèles")
 st.dataframe(comparison_df)
@@ -315,7 +314,7 @@ fig, ax = plt.subplots(figsize=(10, 6))
 sns.heatmap(comparison_df.set_index('Model'), annot=True, cmap='YlGnBu', fmt='.3f', ax=ax)
 st.pyplot(fig)
 
-   # Diagramme en barres des performances
+# Diagramme en barres des performances
 st.subheader("Diagramme en Barres des Performances")
 fig, ax = plt.subplots(figsize=(10, 6))
 comparison_df.set_index('Model').plot(kind='bar', ax=ax, color=['blue', 'green', 'red', 'purple'])
