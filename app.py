@@ -31,13 +31,19 @@ import streamlit as st
 
 # Charger les modèles
 try:
-    rf_model = joblib.load('rf_model.pkl')
+    
     svm_model = joblib.load('svm_model.pkl')
     lr_model = joblib.load('lr_model.pkl')
     knn_model = joblib.load('knn_model.pkl')
     nn_model = joblib.load('nn_model.pkl')
 except FileNotFoundError as e:
     st.error(f"Erreur lors du chargement des modèles : {e}")
+
+try:
+    rf_model = joblib.load('rf_model.pkl')
+    print("Modèle chargé avec succès.")
+except FileNotFoundError:
+    print("Erreur : le fichier rf_model.pkl n'a pas été trouvé.")   
 
 # Charger les données
 try:
