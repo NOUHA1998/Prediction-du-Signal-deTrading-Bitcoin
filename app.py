@@ -303,27 +303,55 @@ try:
 except FileNotFoundError:
     st.error(f"Fichier 'roc_curve_{model_choice}.png' introuvable.")
 
+
+# Définir la liste des modèles
+models = ['Random_Forest', 'SVM', 'Logistic_Regression', 'KNN', 'MLPClassifier']
+
 # Charger les résultats de comparaison des modèles
-comparison_df = pd.read_csv('model_comparison_results.csv')
+# Remplacez 'model_comparison_results.csv' par le chemin correct de votre fichier CSV
+try:
+    comparison_df = pd.read_csv('model_comparison_results.csv')
+    print("Fichier CSV chargé avec succès.")
+    print("Colonnes du fichier CSV :", comparison_df.columns)
+except Exception as e:
+    st.error(f"Erreur lors du chargement du fichier CSV : {e}")
+
+# Vérifier si la colonne 'Model' existe
+if 'Model' not in comparison_df.columns:
+    # Si la colonne 'Model' n'existe pas, on la crée à partir de la liste des modèles
+    comparison_df['Model'] = models[:len(comparison_df)]  # Assurez-vous que la longueur correspond
+    print("Colonne 'Model' ajoutée au DataFrame.")
+
+# Afficher le DataFrame
 st.subheader("Comparaison des Performances des Modèles")
 st.dataframe(comparison_df)
 
 # Carte thermique des performances
 st.subheader("Carte Thermique des Performances")
-fig, ax = plt.subplots(figsize=(10, 6))
-sns.heatmap(comparison_df.set_index('Model'), annot=True, cmap='YlGnBu', fmt='.3f', ax=ax)
-st.pyplot(fig)
+try:
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.heatmap(comparison_df.set_index('Model'), annot=True, cmap='YlGnBu', fmt='.3f', ax=ax)
+    plt.title('Carte Thermique des Performances des Modèles')
+    st.pyplot(fig)
+except Exception as e:
+    st.error(f"Erreur lors de la génération de la carte thermique : {e}")
 
 # Diagramme en barres des performances
 st.subheader("Diagramme en Barres des Performances")
-fig, ax = plt.subplots(figsize=(10, 6))
-comparison_df.set_index('Model').plot(kind='bar', ax=ax, color=['blue', 'green', 'red', 'purple'])
-ax.set_title('Comparaison des Performances des Modèles')
-ax.set_ylabel('Score')
-ax.set_xlabel('Modèles')
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-st.pyplot(fig)
+try:
+    fig, ax = plt.subplots(figsize=(10, 6))
+    comparison_df.set_index('Model').plot(kind='bar', ax=ax, color=['blue', 'green', 'red', 'purple', 'orange'])
+    ax.set_title('Comparaison des Performances des Modèles')
+    ax.set_ylabel('Score')
+    ax.set_xlabel('Modèles')
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+    st.pyplot(fig)
+except Exception as e:
+    st.error(f"Erreur lors de la génération du diagramme en barres : {e}")
 
+# Sauvegarder les résultats mis à jour (avec la colonne 'Model' ajoutée si nécessaire)
+comparison_df.to_csv('model_comparison_results_updated.csv', index=False)
+print("Résultats mis à jour sauvegardés dans 'model_comparison_results_updated.csv'.")
 
     # Expliquer le choix du modèle Random Forest
 st.subheader("Modèle choisi : Random Forest")
